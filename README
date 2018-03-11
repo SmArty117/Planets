@@ -1,0 +1,23 @@
+I set myself the task to write a program which can simulate gravitational interactions between a given number of particles and with given initial conditions (as inputs to the program). I wanted it to be extendable, modular and general, allowing me to use many parts of it for the next assignment, for example.
+
+The header "physics.h" has the declarations of all the classes and functions shared between files, and all the headers needed in multiple files. First, I built a Vector class to include all the vector functionality needed, i.e. addition, scalar multiplication, comparison. The Object class represents the particles in the system, with position, velocity, mass, acceleration etc. The physical interaction between particles and the update routines are in the file "physics.cpp". I implemented two update routines, Euler (simple) and leapfrog. The file "simulation.cpp" is the main file, where the update routines are run to produce the output. The input is read from the file "data/planets.dat", which is formatted as follows:
+    G   timestep    num_of_iterations
+    particles   dimensions
+
+    mass
+    x y
+    vx vy
+    (repeat for each particle)
+
+While working on this assignment, I learned to write object-oriented programs in C++, which proved to be more of a challenge than expected, for several reasons: 
+    1. The details of reference, pointer and instance equality, passing arguments by reference or value and comparing them. This is more complicated than in other OO languages, like Java. For example, it was hard to make the program not try to calculate the force between an object and itself in the function totalForce(), which resulted in a NaN. Thankfully, I didn't have to deal with inheritance yet.
+
+    2. In order to keep the program modular and extendable, I had to learn to use keywords like const, friend, operator.
+
+I also learned how to write more complicated makefiles (see the makefile included).
+
+I plotted the data using Python and Matplotlib, because it provides friendly ways of reading, plotting and even animating data. The Python script "plotting.py" makes a static plot of the trajectory data, together with plots of the kinetic energy and angular momenta about the origin of the particles. The script "animate.py" makes an animated plot of the particles' movement, and "extra_anim.py" makes animated plots of the trajectories, KEs and angular momenta. 
+
+Physics-wise: from the plots we can observe, for example, the fact that the total angular momentum of the system remains constant. We can also see when a system is bounded or not, which depends on the initial KE and PE of the particles. If the total energy is too high, the system is unbounded and the particles will escape (moving along hyperbolic trajectories). If the system is bounded, the trajectories are clearly ellipses. I also saw, by experiment, that it's quite difficult to come up with a stable 3-particle system.
+
+I could also draw some conclusions about the numerical methods used: the leapfrog method is clearly superior, allowing me to increase the time step by a factor of 10 when I switched to it from the simple update routine. I could observe the effects of having a too large time step: the orbits become inconsistent, taking a slightly different path every iteration.
